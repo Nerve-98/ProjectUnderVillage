@@ -14,7 +14,6 @@ public class EffectManager : MonoBehaviour
     void Awake()
     {
         s_instance = this;
-        CanUsePlayerEffect = true;
     }
     void Start()
     {

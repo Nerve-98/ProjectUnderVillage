@@ -62,7 +62,6 @@ public class PlayerESkill : MonoBehaviour
 
 
         // effect reposition
-        Debug.Log(originalScale);
             
         Effect.transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
         Effect.transform.rotation *= Quaternion.Euler(0, 0, 90);
