@@ -17,36 +17,36 @@ public class PlayerESkill : MonoBehaviour
     }
     void Update()
     {
-        ActivateESkill();
+        if (Input.GetKeyDown(KeyCode.E) && EffectManager.Instance.CanUsePlayerEffect)
+        {
+            ActivateESkill();
+        }
     }
 
-    void ActivateESkill()
+        void ActivateESkill()
     {
         // todo: cooltime
-        if(Input.GetKeyDown(KeyCode.E) && EffectManager.Instance.CanUsePlayerEffect)
+        GameObject Effect;
+        for (int i = 0; i < EffectsTransformArr.Length; i++)
         {
-            GameObject Effect;
-            for (int i = 0; i < EffectsTransformArr.Length; i++)
+            Effect = EffectsTransformArr[i].gameObject;
+            if (!Effect.activeSelf)
             {
-                Effect = EffectsTransformArr[i].gameObject;
-                if (!Effect.activeSelf)
-                {
-                    Effect.transform.position = Managers.Instance.player.transform.position + EffectManager.Instance.PlayerEskill_x_offset;
-                    Effect.SetActive(true);
-                    EskillReposition(Effect);
-                    return;
-                }
+                Effect.transform.position = Managers.Instance.player.transform.position + EffectManager.Instance.PlayerEskill_x_offset;
+                Effect.SetActive(true);
+                EskillReposition(Effect);
+                return;
             }
-
-            // Effect pooling because all effects are using by great player
-            Effect = Instantiate(EffectPrefab);
-            Effect.transform.SetParent(gameObject.transform);
-            Effect.transform.position = Managers.Instance.player.transform.position + EffectManager.Instance.PlayerEskill_x_offset;
-            Effect.SetActive(true);
-            EffectsTransformArr = GetComponentsInChildren<Transform>(true);
-            EskillReposition(Effect);
-            return;
         }
+
+        // Effect pooling because all effects are using by great player
+        Effect = Instantiate(EffectPrefab);
+        Effect.transform.SetParent(gameObject.transform);
+        Effect.transform.position = Managers.Instance.player.transform.position + EffectManager.Instance.PlayerEskill_x_offset;
+        Effect.SetActive(true);
+        EffectsTransformArr = GetComponentsInChildren<Transform>(true);
+        EskillReposition(Effect);
+        return;
     }
     void EskillReposition(GameObject Effect)
     {
