@@ -8,7 +8,8 @@ public class DungeonMapGenerationTest : MonoBehaviour
     public GameObject[] rooms; // from 0 LR, LRB, LRT, LRBT
 
     private int direction;
-    private float moveAmount = 10;
+    private float x_moveAmount = 20;
+    private float y_moveAmount = 10;
     private float timeBtwRoom;
     private float startTimeBtwRoom = 1.0f;
     public float minX;
@@ -67,7 +68,7 @@ public class DungeonMapGenerationTest : MonoBehaviour
             {
 
                 BottomCounter = 0;
-                newPos = new Vector3(transform.position.x + moveAmount, transform.position.y, transform.position.z);
+                newPos = new Vector3(transform.position.x + x_moveAmount, transform.position.y, transform.position.z);
                 transform.position = newPos;
                 direction = Random.Range(right_rand_min, bottom_rand_max + 1);
 
@@ -99,7 +100,7 @@ public class DungeonMapGenerationTest : MonoBehaviour
             if (transform.position.x > minX)
             {
                 BottomCounter = 0;
-                newPos = new Vector3(transform.position.x - moveAmount, transform.position.y, transform.position.z);
+                newPos = new Vector3(transform.position.x - x_moveAmount, transform.position.y, transform.position.z);
                 transform.position = newPos;
                 direction = Random.Range(left_rand_min, bottom_rand_max + 1);
                 roomRand = Random.Range(0, rooms.Length);
@@ -135,7 +136,7 @@ public class DungeonMapGenerationTest : MonoBehaviour
                         }
                     }
                 }
-                newPos = new Vector3(transform.position.x, transform.position.y - moveAmount, transform.position.z);
+                newPos = new Vector3(transform.position.x, transform.position.y - y_moveAmount, transform.position.z);
                 transform.position = newPos;
                 direction = Random.Range(right_rand_min, bottom_rand_max + 1);
 
@@ -160,7 +161,6 @@ public class DungeonMapGenerationTest : MonoBehaviour
     private void InitialRoomSetting()
     {
         startingPositions = GameObject.FindGameObjectWithTag("RoomStartingPositions").GetComponentsInChildren<Transform>();
-        Debug.Log(startingPositions[0].name);
         minX = startingPositions[1].transform.position.x;
         maxX = startingPositions[startingPositions.Length - 1].transform.position.x;
         minY = startingPositions[1].transform.position.y - 30;
