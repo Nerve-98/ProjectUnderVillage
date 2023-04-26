@@ -13,7 +13,7 @@ public class DeactivateSkillEffect : MonoBehaviour
     void Update()
     {
     }
-    void DeactivateSkillEffectFunc()
+    void DeactivateSkillEffectFunc() // Animation Event
     {
         gameObject.SetActive(false);
     }

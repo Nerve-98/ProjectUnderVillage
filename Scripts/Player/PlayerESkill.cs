@@ -23,8 +23,9 @@ public class PlayerESkill : MonoBehaviour
         }
     }
 
-        void ActivateESkill()
+    void ActivateESkill()
     {
+        SoundManager.Instance.Play(Define.Sound.Effect, "Sound/PlayerEskillSound");
         // todo: cooltime
         GameObject Effect;
         for (int i = 0; i < EffectsTransformArr.Length; i++)

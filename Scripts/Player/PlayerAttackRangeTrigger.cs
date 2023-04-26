@@ -33,6 +33,6 @@ public class PlayerAttackRangeTrigger : MonoBehaviour
     {
         gameObject.transform.position = Managers.Instance.player.transform.position;
         attackrange.enabled = false;
-        Debug.Log("Attack Range hit with : " + collision.name);
+        //Debug.Log("Attack Range hit with : " + collision.name);
     }
 }
