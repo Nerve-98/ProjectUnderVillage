@@ -8,7 +8,7 @@ public class Managers : MonoBehaviour
     static int monstercnt;
 
     public GameObject player;
-
+    public GameObject MonsterPooling;
 
 
     private static Managers s_instance;
@@ -23,6 +23,7 @@ public class Managers : MonoBehaviour
     {
         Init();
         player = GameObject.Find("Player");
+        MonsterPooling = GameObject.Find("MonsterPooling");
     }
 
     void Start()

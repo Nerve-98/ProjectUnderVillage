@@ -1,30 +1,51 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Skeleton : Monster
 {
-    float skeleton_recognize_distance = 6.0f;
-    float skeleton_attack_range = 1.5f;
-    bool is_hit = false;
-    float is_hit_duration;
-    const float is_hit_duration_const = 0.15f;
+    const float skeleton_recognize_distance = 6.0f;
+    const float skeleton_attack_range = 1.5f;
+
+
     public enum SkeletonState
     {
         Idle,
         Walk,
-        Attack1
+        Attack1,
+        Death,
+        Death2
     }
+
+
     SkeletonState _state = SkeletonState.Idle;
-    void Start()
-    {
+    bool is_hit = false;
+    float is_hit_duration;
+    const float is_hit_duration_const = 0.15f;
 
-
-
-    }
 
     void Update()
     {
+        if (HPcanvas.activeSelf)
+        {
+            if(hp_orange > hp)
+            {
+                hp_orange -= Time.deltaTime * hpdisapperspeed;
+            }
+            else
+            {
+                hp_orange = hp;
+            }
+            HPslider[redhpindex].value = Mathf.Max(0, hp / MaxHp);
+            HPslider[orangehpindex].value = Mathf.Max(0, hp_orange / MaxHp);
+        }
+        if(hp <= 0 && _state != SkeletonState.Death2)   
+        {
+            _state = SkeletonState.Death;
+        }
+
+
         switch(_state)
         {
             case SkeletonState.Idle:
@@ -33,9 +54,16 @@ public class Skeleton : Monster
             case SkeletonState.Walk:
                 UpdateWalk();
                 break;
+            case SkeletonState.Death:
+                UpdateDeath();
+                break;
+            case SkeletonState.Death2: // end update by object enabled false
+                UpdateDeath2();
+                break;
             default:
                 break;
         }
+
         if(is_hit)
         {
             is_hit_duration -= Time.deltaTime;
@@ -46,6 +74,31 @@ public class Skeleton : Monster
             }
         }
     }
+    private void AE_UpdateDeath2()
+    {
+        Anim.SetBool("SkeletonDeath2", true);
+    }
+    private void UpdateDeath2()
+    {
+        if (hp_orange < 0.01)
+        {
+            gameObject.SetActive(false);
+            gameObject.transform.parent = Managers.Instance.MonsterPooling.transform;
+            _state = SkeletonState.Idle;
+            is_hit = false;
+            is_hit_duration = is_hit_duration_const;
+            Monster_SR.material = Monster_OriginMaterial;
+            Anim.SetBool("IdleToWalk", false);
+            Anim.SetBool("WalkToIdle", false);
+            Anim.SetBool("SkeletonDeath2", false);
+        }
+    }
+    private void UpdateDeath()
+    {
+        Anim.SetTrigger("SkeletonDeath");
+        _state = SkeletonState.Death2;
+    }
+
     void UpdateWalk()
     {
         Anim.SetBool("IdleToWalk", false);
@@ -97,16 +150,24 @@ public class Skeleton : Monster
         base.OnTriggerEnter2D(collision);
         if (collision.transform.CompareTag("PlayerAttack"))
         {
+            AttackTrigger(collision, "PlayerAttackHitSound");
+            hp -= DataManager.Instance.StatDict["SwordCharacter"].attackdmg;
+            /*
             collision.enabled = false;
             SoundManager.Instance.Play(Define.Sound.Effect, "Sound/PlayerAttackHitSound");
-            HitWhite(); 
+            HPcanvas.enabled = true;
+            HitWhite(); */
             //Debug.Log("Skeleton enter " + collision.name);
         }
         else if (collision.transform.CompareTag("PlayerSkillAttack"))
         {
+            AttackTrigger(collision, "EskillHitSound");
+            hp -= DataManager.Instance.StatDict["SwordCharacter"].eskillattackdmg;
+            /*
             //Debug.Log("Skeleton skill " + collision.name);
             SoundManager.Instance.Play(Define.Sound.Effect, "Sound/EskillHitSound");
-            HitWhite();
+            HPcanvas.enabled = true;
+            HitWhite();*/
 
         }
     }
@@ -116,5 +177,10 @@ public class Skeleton : Monster
         is_hit_duration = is_hit_duration_const;
         is_hit = true;
     }
-
+    void AttackTrigger(Collider2D collision, string skillsound)
+    {
+        SoundManager.Instance.Play(Define.Sound.Effect, $"Sound/{skillsound}");
+        HPcanvas.SetActive(true);
+        HitWhite();
+    }
 }
