@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
+    public GameObject ore_prefab;
+
     const float skeleton_recognize_distance = 6.0f;
     const float skeleton_attack_range = 1.5f;
 
@@ -14,6 +16,9 @@ public class Skeleton : Monster
 
     const float skeleton_attack_period_const = 0.5f;
     float skeleton_attack_period = 0.5f;
+
+    const int ore_drop_cnt = 5;
+
     public enum SkeletonState
     {
         Idle,
@@ -37,6 +42,7 @@ public class Skeleton : Monster
         {
             hitbox.enabled = false;
             _state = SkeletonState.Death;
+            ItemDrop();
         }
 
         if (skeleton_attack_cooltime >= 0)
@@ -167,6 +173,21 @@ public class Skeleton : Monster
                 }
             }
 
+        }
+    }
+    private void ItemDrop()
+    {
+        Transform[] ores = ore_drop_pooling.GetComponentsInChildren<Transform>(true);
+        //Debug.Log(ores.Length);
+        if(ores.Length - 1 < ore_drop_cnt)
+        {
+
+        }
+
+        for(int i = 1; i <= ore_drop_cnt; i++) {
+            ores[i].gameObject.SetActive(true);
+            ores[i].transform.position = gameObject.transform.position;
+            ores[i].GetComponent<ItemDrop>().itemdropforce();
         }
     }
 }

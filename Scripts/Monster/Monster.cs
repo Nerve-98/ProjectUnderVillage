@@ -50,13 +50,14 @@ public class Monster : MonoBehaviour
     // Info
     protected float speed = 0.6f;
 
+    // drop item
+    protected GameObject ore_drop_pooling;
 
-    private void Awake()
-    {
 
-    }
+
     void Start()
     {
+        ore_drop_pooling = GameObject.Find("OreDropPooling");
 
         hitbox = transform.GetChild(0).GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
