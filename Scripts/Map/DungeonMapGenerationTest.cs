@@ -11,7 +11,7 @@ public class DungeonMapGenerationTest : MonoBehaviour
     private float x_moveAmount = 20;
     private float y_moveAmount = 10;
     private float timeBtwRoom;
-    private float startTimeBtwRoom = 1.0f;
+    //private float startTimeBtwRoom = 1.0f;
     public float minX;
     public float maxX;
     public float minY;
@@ -41,20 +41,25 @@ public class DungeonMapGenerationTest : MonoBehaviour
     }
     void Start()
     {
-
+        Vector3 newPos = new Vector3(transform.position.x - 4, transform.position.y - 1, Managers.Instance.player.transform.position.z);
+        //Managers.Instance.player.transform.position = newPos;
+        GameObject cam = GameObject.Find("Main Camera");
+        cam.transform.position = Managers.Instance.player.transform.position;
     }
 
     void Update()
     {
-        if(stopGeneration == false && timeBtwRoom <= 0)
+        if (stopGeneration == false)// && timeBtwRoom <= 0)
         {
             Move();
+        }
+            /*
             timeBtwRoom = startTimeBtwRoom;
         }
         else
         {
             timeBtwRoom -= Time.deltaTime;
-        }
+        }*/
     }
 
     private void Move()
@@ -146,6 +151,10 @@ public class DungeonMapGenerationTest : MonoBehaviour
             }
             else
             {
+                Collider2D roomDetection = Physics2D.OverlapCircle(transform.position, 1, RoomLayerMask);
+                Transform exitportal = roomDetection.transform.parent.Find("Portal");
+                exitportal.gameObject.SetActive(true);
+
                 stopGeneration = true;
             }
         }
