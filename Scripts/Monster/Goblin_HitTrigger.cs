@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skeleton_HitTrigger : Skeleton
+public class Goblin_HitTrigger : Skeleton
 {
-    Skeleton skeleton;
+    Goblin goblin;
 
     protected override void Start()
     {
-        skeleton = transform.parent.GetComponent<Skeleton>();
+        goblin = transform.parent.GetComponent<Goblin>();
     }
 
     void Update()
@@ -24,8 +24,8 @@ public class Skeleton_HitTrigger : Skeleton
         {
             CharacterStat character = DataManager.Instance.StatDict["SwordCharacter"];
             UIManager.Instance.DamageText(character.attackdmg, transform);
-            skeleton.MonsterHit(collision, "PlayerAttackHitSound");
-            skeleton.hp -= character.attackdmg;
+            goblin.MonsterHit(collision, "PlayerAttackHitSound");
+            goblin.hp -= character.attackdmg;
             /*
             collision.enabled = false;
             SoundManager.Instance.Play(Define.Sound.Effect, "Sound/PlayerAttackHitSound");
@@ -37,8 +37,8 @@ public class Skeleton_HitTrigger : Skeleton
         {
             CharacterStat character = DataManager.Instance.StatDict["SwordCharacter"];
             UIManager.Instance.DamageText(character.eskillattackdmg, transform);
-            skeleton.MonsterHit(collision, "EskillHitSound");
-            skeleton.hp -= character.eskillattackdmg;
+            goblin.MonsterHit(collision, "EskillHitSound");
+            goblin.hp -= character.eskillattackdmg;
             /*
             //Debug.Log("Skeleton skill " + collision.name);
             SoundManager.Instance.Play(Define.Sound.Effect, "Sound/EskillHitSound");

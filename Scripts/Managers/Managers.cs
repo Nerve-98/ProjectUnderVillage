@@ -9,6 +9,7 @@ public class Managers : MonoBehaviour
 
     public GameObject player;
     public GameObject MonsterPooling;
+    public PlayerSkillInfo playerskillinfo;
 
 
     private static Managers s_instance;
@@ -24,6 +25,7 @@ public class Managers : MonoBehaviour
         Init();
         player = GameObject.Find("Player");
         MonsterPooling = GameObject.Find("MonsterPooling");
+        playerskillinfo = player.GetComponent<PlayerSkillInfo>();
     }
 
     void Start()

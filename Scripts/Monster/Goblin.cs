@@ -3,27 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skeleton : Monster
+public class Goblin : Monster
 {
     public GameObject ore_prefab;
 
-    const float skeleton_recognize_distance = 6.0f;
-    const float skeleton_attack_range = 1.5f;
+    const float recognize_distance = 6.0f;
+    const float attack_range = 2.5f;
 
-    const float skeleton_attack_cooltime_const = 3f;
-    float skeleton_attack_cooltime = -1f;
+    const float attack_cooltime_const = 3f;
+    float attack_cooltime = -1f;
 
-    const float skeleton_attack_period_const = 0.5f;
-    float skeleton_attack_period = 0.5f;
+    const float attack_period_const = 0.3f;
+    float attack_period = 0f;
 
     const int ore_drop_cnt = 5;
 
-    float skeleton_MaxHp = 40;
+    float goblin_speed = 3;
+    float goblin_MaxHp = 30;
+
     protected override void Start()
     {
         base.Start();
-        MaxHp = skeleton_MaxHp;
+        MaxHp = goblin_MaxHp;
         hp = MaxHp;
+        speed = goblin_speed;
     }
 
     void Update()
@@ -31,7 +34,7 @@ public class Skeleton : Monster
         HPupdate();
         Hitupdate();
 
-        if (hp <= 0.01 && _state != MonsterState.Death2)   
+        if (hp <= 0.01 && _state != MonsterState.Death2)
         {
             hitbox.enabled = false;
             _state = MonsterState.Death;
@@ -39,8 +42,8 @@ public class Skeleton : Monster
             ItemDrop();
         }
 
-        if (skeleton_attack_cooltime >= 0)
-            skeleton_attack_cooltime -= Time.deltaTime;
+        if (attack_cooltime >= 0)
+            attack_cooltime -= Time.deltaTime;
 
         switch (_state)
         {
@@ -81,7 +84,7 @@ public class Skeleton : Monster
     }
     private void AE_UpdateDeath()
     {
-        Anim.SetBool("SkeletonDeath2", true);
+        Anim.SetBool("Death2", true);
     }
     private void AE_UpdateDeath2() // really death -> intialize all parameter for pooling
     {
@@ -95,13 +98,13 @@ public class Skeleton : Monster
             Monster_SR.material = Monster_OriginMaterial;
             Anim.SetBool("IdleToWalk", false);
             Anim.SetBool("WalkToIdle", false);
-            Anim.SetBool("SkeletonDeath2", false);
+            Anim.SetBool("Death2", false);
         }
     }
 
     private void UpdateDeath()
     {
-        Anim.SetTrigger("SkeletonDeath");
+        Anim.SetTrigger("Death");
         _state = MonsterState.Death2;
     }
 
@@ -111,7 +114,7 @@ public class Skeleton : Monster
         position_play_monster_diff = Managers.Instance.player.transform.position - gameObject.transform.position;
         distance = Vector3.Magnitude(Managers.Instance.player.transform.position - gameObject.transform.position);
         float velocity_dir;
-        if(distance < skeleton_recognize_distance && skeleton_attack_range < Mathf.Abs(position_play_monster_diff.x))
+        if (distance < recognize_distance && attack_range < Mathf.Abs(position_play_monster_diff.x))
         {
             if (position_play_monster_diff.x < 0)
             {
@@ -146,22 +149,22 @@ public class Skeleton : Monster
         rb.velocity = Vector2.zero;
         position_play_monster_diff = Managers.Instance.player.transform.position - gameObject.transform.position;
         distance = Vector3.Magnitude(Managers.Instance.player.transform.position - gameObject.transform.position);
-       // Debug.Log("distance : " + distance);
+        // Debug.Log("distance : " + distance);
         //Debug.Log(gameObject.name);
-        if (distance < skeleton_recognize_distance && Mathf.Abs(position_play_monster_diff.x) > skeleton_attack_range)
+        if (distance < recognize_distance && Mathf.Abs(position_play_monster_diff.x) > attack_range)
         {
-            Anim.SetBool("IdleToWalk",true);
+            Anim.SetBool("IdleToWalk", true);
             _state = MonsterState.Walk;
         }
-        else if(distance < skeleton_recognize_distance && Mathf.Abs(position_play_monster_diff.x) < skeleton_attack_range)
+        else if (distance < recognize_distance && Mathf.Abs(position_play_monster_diff.x) < attack_range)
         {
-            skeleton_attack_period -= Time.deltaTime;
-            if(skeleton_attack_period < 0 && skeleton_attack_cooltime < 0)
+            attack_period -= Time.deltaTime;
+            if (attack_period < 0 && attack_cooltime < 0)
             {
-                skeleton_attack_period = skeleton_attack_period_const;
-                if (UnityEngine.Random.Range(0,2) == 0)
+                attack_period = attack_period_const;
+                if (UnityEngine.Random.Range(0, 2) == 0)
                 {
-                    skeleton_attack_cooltime = skeleton_attack_cooltime_const;
+                    attack_cooltime = attack_cooltime_const;
                     Anim.SetBool("IdleToAttack", true);
                     _state = MonsterState.Attack1;
                 }
@@ -173,12 +176,13 @@ public class Skeleton : Monster
     {
         Transform[] ores = ore_drop_pooling.GetComponentsInChildren<Transform>(true);
         //Debug.Log(ores.Length);
-        if(ores.Length - 1 < ore_drop_cnt)
+        if (ores.Length - 1 < ore_drop_cnt)
         {
 
         }
 
-        for(int i = 1; i <= ore_drop_cnt; i++) {
+        for (int i = 1; i <= ore_drop_cnt; i++)
+        {
             ores[i].gameObject.SetActive(true);
             ores[i].transform.position = gameObject.transform.position;
             //Debug.Log(ores[i].name);

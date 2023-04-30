@@ -26,13 +26,15 @@ public class ItemDrop : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         if(collision.gameObject.tag == "Item" || collision.gameObject.tag == "Monster")
         {
             Physics2D.IgnoreCollision(collision.otherCollider, collision.collider);
         }
         else if(collision.gameObject.tag == "Player")
         {
+            SoundManager.Instance.Play(Define.Sound.Effect, "Sound/OreGetSound");
+            //Debug.Log(collision.gameObject.name);
+            UIManager.Instance.OreGetText(Random.Range(7, 13), gameObject.transform);
             gameObject.SetActive(false);
         }
     }

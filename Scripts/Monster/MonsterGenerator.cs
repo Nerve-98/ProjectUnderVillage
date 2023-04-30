@@ -6,7 +6,7 @@ public class MonsterGenerator : MonoBehaviour
 {
     public GameObject[] MonsterPrefab;
     int MonsterPrefab_cnt;
-    int monster_rand_max = 2; // now 1 Skeleton / 2 = 50%
+    int monster_rand_max = 3; // now 1 Skeleton / 2 = 50%
     private void Awake()
     {
         MonsterPrefab_cnt = MonsterPrefab.Length;

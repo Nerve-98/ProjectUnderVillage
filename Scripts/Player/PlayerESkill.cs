@@ -17,9 +17,10 @@ public class PlayerESkill : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && EffectManager.Instance.CanUsePlayerEffect)
+        if (!Managers.Instance.playerskillinfo.is_Ecool && Input.GetKeyDown(KeyCode.E) && EffectManager.Instance.CanUsePlayerEffect)
         {
             ActivateESkill();
+            EskillCooltime();
         }
     }
 
@@ -66,6 +67,14 @@ public class PlayerESkill : MonoBehaviour
             
         Effect.transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
         Effect.transform.rotation *= Quaternion.Euler(0, 0, 90);
+
+    }
+
+    void EskillCooltime()
+    {
+        PlayerSkillInfo info = Managers.Instance.playerskillinfo;
+        info.is_Ecool = true;
+        info.Ecooltime = info.Ecooltime_setting;
 
     }
 }

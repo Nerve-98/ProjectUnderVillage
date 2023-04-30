@@ -38,7 +38,7 @@ public class Monster : MonoBehaviour
 
     protected float MaxHp = 30;
     protected float hpdisapperspeed = 10;
-    public float hp;
+    public float hp; // need to be public
     protected float hp_orange;
 
 
@@ -48,14 +48,25 @@ public class Monster : MonoBehaviour
     protected const float is_hit_duration_const = 0.15f;
 
     // Info
-    protected float speed = 0.6f;
+    protected float speed = 1f;
 
     // drop item
     protected GameObject ore_drop_pooling;
 
 
+    //anim state
+    public enum MonsterState
+    {
+        Idle,
+        Walk,
+        Attack1,
+        Attack2,
+        Death,
+        Death2
+    }
+    protected MonsterState _state = MonsterState.Idle;
 
-    void Start()
+    protected virtual void Start()
     {
         ore_drop_pooling = GameObject.Find("OreDropPooling");
 
@@ -68,7 +79,6 @@ public class Monster : MonoBehaviour
         HPcanvas = transform.GetChild(5).gameObject;
         HPslider = HPcanvas.GetComponentsInChildren<UnityEngine.UI.Slider>();
         Anim = GetComponent<Animator>();
-
 
         BoxCollider2D[] attacktriggers = transform.GetChild(6).GetComponentsInChildren<BoxCollider2D>();
         if (attacktriggers.Length >= 2)
